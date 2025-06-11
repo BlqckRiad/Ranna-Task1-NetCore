@@ -1,0 +1,128 @@
+# UserLoginRegisterService API Dökümantasyonu
+
+## Authentication
+- Tüm endpointler JWT Bearer Token ile korunmaktadır (Register ve Login hariç).
+- Token, `Authorization: Bearer {token}` header'ı ile gönderilmelidir.
+
+---
+
+## 1. Auth (Kayıt & Giriş)
+
+### POST /api/Register/UserRegister
+**Açıklama:** Yeni kullanıcı kaydı oluşturur.  
+**Request Body:**
+```
+{
+  "userEmail": "user@example.com",
+  "password": "123456"
+}
+```
+**Response:**
+- 200 OK: Kayıt başarılı
+- 400 Bad Request: Hatalı giriş veya e-posta zaten kullanılıyor
+
+---
+
+### POST /api/Login/Login
+**Açıklama:** Kullanıcı girişi yapar ve JWT token döner.  
+**Request Body:**
+```
+{
+  "userEmail": "user@example.com",
+  "password": "123456"
+}
+```
+**Response:**
+```
+{
+  "success": true,
+  "token": "jwt_token_string"
+}
+```
+Başarısızsa:
+```
+{
+  "success": false,
+  "message": "Kullanıcı adı veya şifre hatalı"
+}
+```
+
+---
+
+## 2. User (Sadece Admin erişebilir)
+
+### GET /api/User/GetAllUsers
+Tüm aktif kullanıcıları listeler.
+
+### GET /api/User/GetDeletedUsers
+Silinmiş kullanıcıları listeler.
+
+### GET /api/User/GetKisiWithID?id={id}
+Belirli bir kullanıcıyı getirir.
+
+### POST /api/User/AddUser
+Yeni kullanıcı ekler.  
+**Request Body:**  
+`UserRegisterDto` ile aynıdır.
+
+### PUT /api/User/UpdateUser
+Kullanıcıyı günceller.  
+**Request Body:**
+```
+{
+  "userID": 1,
+  "updatedUserID": 2
+}
+```
+> Not: Şu an User entity'de sadece güncellenebilir alanlar bunlardır.
+
+### DELETE /api/User/DeleteUser?id={id}
+Kullanıcıyı siler (soft delete).
+
+---
+
+## 3. SupportForm (Admin erişimi)
+
+### GET /api/SupportForm/GetAllSupportForms
+Tüm destek formlarını listeler.
+
+### GET /api/SupportForm/GetSupportFormsByStatus?statusCode={status}
+Belirli durumdaki formları listeler.
+
+### GET /api/SupportForm/GetSupportFormWithID?id={id}
+Belirli bir destek formunu getirir.
+
+---
+
+## 4. SupportFormUser (Kullanıcı erişimi)
+
+### GET /api/SupportFormUser/GetMySupportForms
+Giriş yapan kullanıcının kendi formlarını listeler.
+
+### POST /api/SupportFormUser/CreateSupportForm
+Yeni destek formu oluşturur.  
+**Request Body:**
+```
+{
+  "subject": "Konu",
+  "message": "Mesaj"
+}
+```
+Yanıt:
+```
+{
+  "success": true
+}
+```
+
+---
+
+## 5. Genel Notlar
+- Tüm endpointler JWT ile korunur (Register ve Login hariç).
+- Tüm yanıtlar JSON formatındadır.
+- Hatalı isteklerde uygun HTTP status kodları ve açıklamalar döner.
+- Soft delete uygulanır, yani silinen kayıtlar veritabanında tutulur ama aktif listelerde gösterilmez.
+
+---
+
+Bu dökümantasyonu panel veya başka bir istemci geliştirirken referans olarak kullanabilirsin. 
