@@ -1,2 +1,31 @@
-# Auto detect text files and perform LF normalization
+# .gitattributes örnek dosyası
+
+# Satır sonu ayarları (Windows ve Unix uyumluluğu için)
 * text=auto
+
+# C# dosyaları için dil belirtimi
+txt linguist-language=Text
+cs linguist-language=C#
+cs diff=csharp
+
+# JSON dosyaları için
+diff=json
+*.json text eol=lf
+
+# Markdown dosyaları için
+*.md text
+
+# Görsel dosyalar binary olarak işaretlenir
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+
+# DLL ve EXE dosyaları binary olarak işaretlenir
+*.dll binary
+*.exe binary
+
+# Türkçe karakter desteği için
+*.cs text working-tree-encoding=UTF-8
+
+# Not: Gerekirse proje özelinde daha fazla ayar eklenebilir.
